@@ -33,17 +33,25 @@
       <tr>
         <td>
           <c:if test="${!userList.isFirstPage()}">
-            <a href="/users/page/first"><<</a>
+            <a href="/users/page/first" class="pure-button pure-button-primary" >
+              <i class="fa fa-angle-double-left"></i>
+            </a>
             <c:if test="${userList.getPage() > 1}">
-              <a href="/users/page/prev"><</a>
+              <a href="/users/page/prev" class="pure-button pure-button-primary">
+                <i class="fa fa-angle-left"></i>
+              </a>
             </c:if>
           </c:if>
           Page ${userList.getPage() + 1} of ${userList.getPageCount()}
           <c:if test="${!userList.isLastPage()}">
             <c:if test="${userList.getPage() < userList.getPageCount() - 2}">
-              <a href="/users/page/next">></a>
+              <a href="/users/page/next" class="pure-button pure-button-primary">
+                <i class="fa fa-angle-right"></i>
+              </a>
             </c:if>
-            <a href="/users/page/last">>></a>
+            <a href="/users/page/last" class="pure-button pure-button-primary">
+              <i class="fa fa-angle-double-right"></i>
+            </a>
           </c:if>
         </td>
         <td>
@@ -51,7 +59,8 @@
             <input name="name" type="text" value="${search}">
             <!--input type="submit" value="Search" class="pure-button pure-button-primary"-->
             <button class="pure-button pure-button-primary" onclick="submit">
-              <i class="fa fa-search"></i> Search
+              <i class="fa fa-search"></i>
+              Search
             </button>
           </form>
         </td>

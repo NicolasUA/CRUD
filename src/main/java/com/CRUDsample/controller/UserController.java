@@ -30,7 +30,7 @@ public class UserController {
         if (pagedListHolder == null) {
             pagedListHolder = new PagedListHolder(userService.listUsers(search));
             pagedListHolder.setPage(0);
-            pagedListHolder.setPageSize(5);
+            pagedListHolder.setPageSize(3);
         }
         map.put("user", new User());
         map.put("userList", pagedListHolder);
