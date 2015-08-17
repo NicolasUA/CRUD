@@ -36,13 +36,22 @@
             <i class="fa fa-arrow-left"></i>
           </a>
         </td>
-        <td>
-          ' ${page} '
+        <td >
+          Page ${page}
         </td>
         <td>
           <a href="/user/next" class="pure-button pure-button-primary">
             <i class="fa fa-arrow-right"></i>
           </a>
+        </td>
+        <td>
+          <form action="/user/search" method="get" class="pure-form pure-form-aligned">
+            <input name="name" type="text" value="${search}">
+            <!--input type="submit" value="Search" class="pure-button pure-button-primary"-->
+            <button class="pure-button pure-button-primary" onclick="submit">
+              <i class="fa fa-search"></i> Search
+            </button>
+          </form>
         </td>
         <td>
           <button class="pure-button pure-button-primary" onclick="addUser()">

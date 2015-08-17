@@ -5,13 +5,8 @@ import com.CRUDsample.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -20,7 +15,7 @@ public class UserController {
     @Autowired
     private UserService userService;
     private int page = 0;
-    private int pageMax = 0;
+    private String search = "";
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String saveUser(@ModelAttribute("user") User user, BindingResult result) {
@@ -31,8 +26,9 @@ public class UserController {
     @RequestMapping(value = {"/", "/listUsers"})
     public String listUsers(Map<String, Object> map) {
         map.put("user", new User());
-        map.put("userList", userService.listUsers(page));
+        map.put("userList", userService.listUsers(search, page));
         map.put("page", page + 1);
+        map.put("search", search);
         return "/user/listUsers";
     }
 
@@ -46,7 +42,7 @@ public class UserController {
     @RequestMapping(value = "/delete/{userId}")
     public String deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);
-        return "redirect:/user/listUsers";
+        return "redirect:listUsers";
     }
 
     @RequestMapping(value = "/prev")
@@ -59,9 +55,15 @@ public class UserController {
 
     @RequestMapping(value = "/next")
     public String nextUsers(Map<String, Object> map) {
-        if (!userService.listUsers(page + 1).isEmpty()) {
+        if (!userService.listUsers(search, page + 1).isEmpty()) {
             page++;
         }
+        return "redirect:listUsers";
+    }
+
+    @RequestMapping(value = "/search")
+    public String searchUsers(@RequestParam(required= false, defaultValue="") String name) {
+        search = name.trim();
         return "redirect:listUsers";
     }
 }
