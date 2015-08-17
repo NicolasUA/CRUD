@@ -1,6 +1,9 @@
 # CRUD
 Simple CRUD web-app with paging and find
 
+За основу взял вот это:
+http://shrestha-manoj.blogspot.com/2014/05/spring-mvc-maven-hibernate-crud-example.html
+
 После загрузки приложения из GitHub:
 
 1. Скомпилировать Maven.
