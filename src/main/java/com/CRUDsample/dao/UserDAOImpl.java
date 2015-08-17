@@ -19,10 +19,8 @@ public class UserDAOImpl implements UserDAO {
         getSession().merge(user);
     }
 
-    public List<User> listUsers(String search, int page) {
+    public List<User> listUsers(String search) {
         Criteria cr = getSession().createCriteria(User.class);
-        cr.setFirstResult(page * 5);
-        cr.setMaxResults(5);
         cr.add(Restrictions.ilike("name", "%" + search + "%"));
         return cr.list();
     }

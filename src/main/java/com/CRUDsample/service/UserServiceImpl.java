@@ -19,8 +19,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<User> listUsers(String search, int page) {
-        return userDAO.listUsers(search, page);
+    public List<User> listUsers(String search) {
+        return userDAO.listUsers(search);
     }
 
     @Transactional(readOnly = true)

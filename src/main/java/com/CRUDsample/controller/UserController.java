@@ -3,6 +3,7 @@ package com.CRUDsample.controller;
 import com.CRUDsample.entity.User;
 import com.CRUDsample.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -10,60 +11,66 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
     @Autowired
     private UserService userService;
-    private int page = 0;
     private String search = "";
+    private PagedListHolder pagedListHolder;
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String saveUser(@ModelAttribute("user") User user, BindingResult result) {
         userService.saveUser(user);
-        return "redirect:listUsers";
+        pagedListHolder.setSource(userService.listUsers(search));
+        return "redirect:/users/listUsers";
     }
 
     @RequestMapping(value = {"/", "/listUsers"})
     public String listUsers(Map<String, Object> map) {
+        if (pagedListHolder == null) {
+            pagedListHolder = new PagedListHolder(userService.listUsers(search));
+            pagedListHolder.setPage(0);
+            pagedListHolder.setPageSize(5);
+        }
         map.put("user", new User());
-        map.put("userList", userService.listUsers(search, page));
-        map.put("page", page + 1);
+        map.put("userList", pagedListHolder);
         map.put("search", search);
-        return "/user/listUsers";
+        return "/users/listUsers";
     }
 
     @RequestMapping(value = "/get/{userId}")
     public String getUser(@PathVariable Long userId, Map<String, Object> map) {
         User user = userService.getUser(userId);
         map.put("user", user);
-        return "/user/userForm";
+        return "/users/userForm";
     }
 
     @RequestMapping(value = "/delete/{userId}")
     public String deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);
-        return "redirect:listUsers";
-    }
-
-    @RequestMapping(value = "/prev")
-    public String prevUsers(Map<String, Object> map) {
-        if (page > 0) {
-            page--;
-        }
-        return "redirect:listUsers";
-    }
-
-    @RequestMapping(value = "/next")
-    public String nextUsers(Map<String, Object> map) {
-        if (!userService.listUsers(search, page + 1).isEmpty()) {
-            page++;
-        }
-        return "redirect:listUsers";
+        pagedListHolder.setSource(userService.listUsers(search));
+        return "redirect:/users/listUsers";
     }
 
     @RequestMapping(value = "/search")
     public String searchUsers(@RequestParam(required= false, defaultValue="") String name) {
         search = name.trim();
-        return "redirect:listUsers";
+        pagedListHolder.setSource(userService.listUsers(search));
+        return "redirect:/users/listUsers";
+    }
+
+    @RequestMapping(value = "/page/{action}")
+    public String pageActions(@PathVariable String action) {
+        switch (action) {
+            case "first":pagedListHolder.setPage(0);
+                break;
+            case "prev":pagedListHolder.previousPage();
+                break;
+            case "next":pagedListHolder.nextPage();
+                break;
+            case "last":pagedListHolder.setPage(pagedListHolder.getPageCount());
+                break;
+        }
+        return "redirect:/users/listUsers";
     }
 }

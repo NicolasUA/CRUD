@@ -32,20 +32,22 @@
     <tbody>
       <tr>
         <td>
-          <a href="/user/prev" class="pure-button pure-button-primary">
-            <i class="fa fa-arrow-left"></i>
-          </a>
-        </td>
-        <td >
-          Page ${page}
+          <c:if test="${!userList.isFirstPage()}">
+            <a href="/users/page/first"><<</a>
+            <c:if test="${userList.getPage() > 1}">
+              <a href="/users/page/prev"><</a>
+            </c:if>
+          </c:if>
+          Page ${userList.getPage() + 1} of ${userList.getPageCount()}
+          <c:if test="${!userList.isLastPage()}">
+            <c:if test="${userList.getPage() < userList.getPageCount() - 2}">
+              <a href="/users/page/next">></a>
+            </c:if>
+            <a href="/users/page/last">>></a>
+          </c:if>
         </td>
         <td>
-          <a href="/user/next" class="pure-button pure-button-primary">
-            <i class="fa fa-arrow-right"></i>
-          </a>
-        </td>
-        <td>
-          <form action="/user/search" method="get" class="pure-form pure-form-aligned">
+          <form action="/users/search" method="get" class="pure-form pure-form-aligned">
             <input name="name" type="text" value="${search}">
             <!--input type="submit" value="Search" class="pure-button pure-button-primary"-->
             <button class="pure-button pure-button-primary" onclick="submit">
@@ -75,9 +77,9 @@
     </tr>
     </thead>
     <tbody>
-    <c:forEach items="${userList}" var="user" varStatus="loopCounter">
+    <c:forEach items="${userList.getPageList()}" var="user" varStatus="loopCounter">
       <tr>
-        <td><c:out value="${loopCounter.count + (page - 1) * 5}" /></td>
+        <td><c:out value="${loopCounter.count + userList.getPage() * userList.getPageSize()}" /></td>
         <td><c:out value="${user.name}" /></td>
         <td><c:out value="${user.age}" /></td>
         <td><c:out value="${user.isAdmin}" /></td>
